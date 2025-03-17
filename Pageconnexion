@@ -1,0 +1,29 @@
+// document.getElementById('loginForm').addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     alert('Connexion en cours...');
+//     });
+
+//     document.getElementById('signupForm').addEventListener('submit', function(e) {
+//     e.preventDefault();
+//     alert('Création de compte en cours...');
+//     });
+
+
+
+
+// Compléter automatiquement un champ
+document.getElementById('username').value = 'Toko'; // Exemple
+
+// Désactiver un bouton jusqu'à ce que les champs soient remplis
+document.getElementById('signupForm').addEventListener('input', function() {
+    let email = document.getElementById('email').value;
+    let password = document.getElementById('password').value;
+    let submitButton = document.getElementById('signupButton');
+
+    // Activer/désactiver le bouton
+    if (email !== '' && password !== '') {
+        submitButton.disabled = false;
+    } else {
+        submitButton.disabled = true;
+    }
+});

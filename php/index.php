@@ -1,21 +1,3 @@
-<?php
-    session_start();
-
-    if (!isset($_SESSION['panier'])) {
-        $_SESSION['panier'] = [];
-    }
-
-    if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nom']) && isset($_POST['prix'])) {
-        $produit = [
-            "nom" => $_POST['nom'],
-            "prix" => $_POST['prix']
-        ];
-        
-        $_SESSION['panier'][] = $produit;
-    }
-
-    $nombreArticles = count($_SESSION['panier']);
-?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -24,25 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Site de vente d'accessoires électroniques</title>
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../js/recherche.js">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
     <header>
         <div class="navbar">
             <div class="logo"><i>TK Buy</i></div>
-            <div class="nav-links">
-                <a href="#">Service</a>
-                <a href="#">Langue</a>
-            </div>
             <div class="icons">
+                <form class="search" action="#" method="GET">
+                    <input type="text" placeholder="Recherche..." id="recherche"/>
+                    <span class="search">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </span>
+                    
+                </form>
                 <span class="account">
                     <a href="../php/connexion.php">
                         <i class="fas fa-user account-icon"></i>
                     </a>
                 </span> 
-                <span class="search">
-                    <i class="fas fa-search"></i>
-                </span>
                 <span>
                     <a href="../php/panier.php">
                         <i class="fas fa-shopping-cart"></i>
@@ -78,18 +61,18 @@
     <section class="categories">
         
         <div class="categories-grid">
-            <?php for ($i = 0; $i < count($categories); $i += 4) : ?>
+            <?php for ($i = 0; $i < count($categories); $i += 4) { ?>
                 <div class="conteneur-categorie">
-                    <?php for ($j = $i; $j < $i + 4 && $j < count($categories); $j++) : ?>
+                    <?php for ($j = $i; $j < $i + 4 && $j < count($categories); $j++) { ?>
                         <div class="category">
                             <a href="<?= $categories[$j]['id'] ?>.php">
                                 <img src="<?= $categories[$j]['image'] ?>" alt="<?= $categories[$j]['nom'] ?>">
                                 <p><?= $categories[$j]['nom'] ?></p>
                             </a>
                         </div>
-                    <?php endfor; ?>
+                    <?php } ?>
                 </div>
-            <?php endfor; ?>
+            <?php }?>
         </div>
     </section>
 

@@ -12,6 +12,10 @@ body, html {
     min-height: 100vh;
 }
 
+a {
+    text-decoration:none;
+}
+
 h1 {
     font-size: 2.5rem;
     margin-top: 120px;
@@ -110,17 +114,6 @@ i {
     margin: 20px;
 }
 
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-.nav-links a {
-    text-decoration: none;
-    color: black;
-    font-size: 18px;
-    font-weight: bold;
-}
 .icons {
     display: flex;
     gap: 15px;
@@ -128,68 +121,6 @@ i {
 .icons span {
     font-size: 20px;
     cursor: pointer;
-}
-
-footer {
-    background-color: #1a1a1a;
-    color: white;
-    padding: 20px 50px;
-    position: relative;
-    height: auto;
-    bottom: 0; 
-
-}
-
-.footer-container {
-    display: flex;
-    justify-content: space-between;
-}
-
-.footer-section {
-    width: 30%;
-    text-align: left;
-}
-
-.footer-section ul {
-    list-style: none;
-    padding: 0;
-    text-align: left;
-}
-
-.footer-section ul li {
-    margin-bottom: 5px;
-}
-
-.footer-section ul li a {
-    color: white;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.footer-section ul li a:hover {
-    text-decoration: underline;
-}
-
-.footer-bottom {
-    background-color: #1a1a1a;
-    color: white;
-    padding: 20px 50px;
-    text-align: center;
-}
-
-.legal-links p {
-    font-size: 14px;
-    margin-top: 10px;
-}
-
-.legal-links a {
-    color: white;
-    text-decoration: none;
-    margin: 0 5px;
-}
-
-.legal-links a:hover {
-    text-decoration: underline;
 }
 
 .section {

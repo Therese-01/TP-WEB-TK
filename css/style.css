@@ -15,6 +15,10 @@ body, html {
     overflow: hidden;
 }
 
+a {
+    text-decoration:none;
+}
+
 .video-containeur video {
     width: 110%;
     height: 110%;
@@ -57,17 +61,7 @@ header {
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
-.nav-links {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-}
-.nav-links a {
-    text-decoration: none;
-    color: black;
-    font-size: 18px;
-    font-weight: bold;
-}
+
 .icons {
     display: flex;
     gap: 15px;

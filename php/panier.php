@@ -1,8 +1,61 @@
 <?php
 session_start();
-$nombreArticles = isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0;
+
+if (!isset($_SESSION['panier'])) {
+    $_SESSION['panier'] = [];
+}
+
+// Gestion suppression d'abord
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['supprimer'])) {
+    $nomProduit = $_POST['supprimer'];
+
+    foreach ($_SESSION['panier'] as $key => $produit) {
+        if ($produit['nom'] === $nomProduit) {
+            unset($_SESSION['panier'][$key]);
+            break;
+        }
+    }
+
+    $_SESSION['panier'] = array_values($_SESSION['panier']);
+
+    // Redirection pour éviter la double soumission
+    header('Location: panier.php');
+    exit();
+}
+
+// Gestion ajout produit
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nom'], $_POST['prix'], $_POST['image'])) {
+    $nom = $_POST['nom'];
+    $prix = $_POST['prix'];
+    $image = $_POST['image'];
+
+    $produit = [
+        'nom' => $nom,
+        'prix' => $prix,
+        'image' => $image
+    ];
+
+    // Vérifie si le produit est déjà dans le panier
+    $trouve = false;
+    foreach ($_SESSION['panier'] as $item) {
+        if ($item['nom'] == $nom) {
+            $trouve = true;
+            break;
+        }
+    }
+
+    if (!$trouve) {
+        $_SESSION['panier'][] = $produit;
+    }
+
+    header('Location: panier.php');
+    exit();
+}
+
+// Nombre d'articles
+$nombreArticles = count($_SESSION['panier']);
 ?>
-    
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -10,6 +63,7 @@ $nombreArticles = isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0;
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accessoires pour jeux vidéo</title>
     <link rel="stylesheet" href="../css/panier.css">
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 
 </head>
@@ -17,101 +71,65 @@ $nombreArticles = isset($_SESSION['panier']) ? count($_SESSION['panier']) : 0;
     <header>
         <div class="navbar">
             <div class="logo"><a href="../php/index.php"><i>TK Buy</i></a></div>
-            <div class="nav-links">
-                <a href="#">Service</a>
-                <a href="#">Langue</a>
-            </div>
             <div class="icons">
+                <form class="search" action="#" method="GET">
+                    <input type="text" class="recherche" placeholder="Recherche..."/>
+                    <span class="search">
+                        <i><button type="submit" class="fas fa-search"></i></button>
+                    </span>
+                </form>
                 <span class="account">
                     <a href="../php/connexion.php">
                         <i class="fas fa-user account-icon"></i>
                     </a>
                 </span> 
-                <span class="search">
-                    <i class="fas fa-search"></i>
-                </span>
                 <span class="panier">
                     <a href="../php/panier.php">
                         <i class="fas fa-shopping-cart"></i>
-                        <?php if ($nombreArticles > 0): ?>
+                        <?php if ($nombreArticles > 0) { ?>
                             <span class="panier-nb"><?= $nombreArticles; ?></span>
-                        <?php endif; ?>
+                        <?php } ?>
                     </a>
                 </span>   
             </div>
         </div>
     </header>
 
+    <section>
+        <?php if (!empty($_SESSION['panier'])) { ?>
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Nom</th>
+                    <th>Prix</th>
+                    <th>Action</th>
+                </tr>
+                <?php
+                $totalPanier = 0;
+                foreach ($_SESSION['panier'] as $produit) {
+                    $totalPanier += $produit['prix'];
+                    ?>
+                    <tr>
+                        <td><img src="<?= $produit['image']; ?>" width="50"></td>
+                        <td><?= $produit['nom']; ?></td>
+                        <td><?= $produit['prix']; ?></td>
+                        <td><button type="button" class="supprimer" data-nom="<?= $produit['nom']; ?>"><img src="../images/im2.JPG"></button></td>
+                    </tr>
+                <?php } ?>
+                <tr class="total">
+                    <th colspan="2">Total :</th>
+                    <th><?= $totalPanier; ?>$</th>
+                </tr>
+            </table>
+        <?php } else {
+        echo "<p>Votre panier est vide.</p>";
+        } ?>
+    </section>
+    
+    <script src="../js/panierSupprimer.js"></script>
 
-    <main>
-        <div class="cart-container">
-            <div class="login-section">
-                <h1>Mon panier</h1>
-                <?php if ($nombreArticles > 0): ?>
-                    <ul class="pan-liste">
-                        <?php foreach ($_SESSION['panier'] as $produit): ?>
-                            <li>
-                                <?= htmlspecialchars($produit['nom']); ?> - <?= number_format($produit['prix'], 2, ',', ' '); ?> €
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
-                <?php else: 
-                ?>
-                    <div class="vide-cart">
-                        <p><strong><b>Votre panier</b></strong> est vide.</p>
-                        <p>Je me laisse tenter !</p>
-                        <form action="../php/index.php" method="get">
-                            <button class="explorer-btn" type="submit">Découvrez nos meilleurs vendeurs</button>
-                        </form>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </main>
 
-    <footer>
-        <div class="footer-container">
-            <div class="footer-section">
-                <h3>Informations sur l’entreprise</h3>
-                <ul>
-                    <li><a href="#">À propos de TK Buy</a></li>
-                    <li><a href="#">Contactez-nous</a></li>
-                    <li><a href="#">Presse</a></li>
-                </ul>
-            </div>
     
-            <div class="footer-section">
-                <h3>Service client</h3>
-                <ul>
-                    <li><a href="#">Politique de retour et de remboursement</a></li>
-                    <li><a href="#">Politique en matière de propriété intellectuelle</a></li>
-                    <li><a href="#">Informations de livraison</a></li>
-                    <li><a href="#">Vos rappels et alertes sur la sécurité des produits</a></li>
-                    <li><a href="#">Signaler une activité suspecte</a></li>
-                </ul>
-            </div>
-    
-            <div class="footer-section">
-                <h3>Aide</h3>
-                <ul>
-                    <li><a href="#">Centre d’aide et FAQ</a></li>
-                    <li><a href="#">Centre de sécurité</a></li>
-                    <li><a href="#">Protection des achats sur TK Buy</a></li>
-                    <li><a href="#">Devenir partenaire de TK Buy</a></li>
-                </ul>
-            </div>
-        </div>
-    </footer>
-    
-    <footer class="footer-bottom">
-        <div class="legal-links">
-            <p>© 2025 TK Buy Inc. 
-                <a href="condition.php"><u>Conditions d'utilisation</u></a>
-                <a href="#"><u>Politique de confidentialité</u></a> 
-                <a href="#"><u>Vos choix en matière de confidentialité</u></a> 
-            </p>
-        </div>
-    </footer>
 
 </body>
 </html> 

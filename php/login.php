@@ -14,7 +14,7 @@
         <div class="container">
             <div class="login-section">
             <h2>Connexion</h2>
-            <form id="loginForm" action="../php/connexionrecue.php" method="POST">
+            <form id="loginForm" action="../php/authentification/connexionrecue.php" method="POST">
                 <div class="email">
                     <label for="emailLogin">Courriel*</label>
                     <input type="email" id="emailLogin" name="courriel" placeholder="Entrez votre courriel" required>
@@ -40,7 +40,7 @@
             <div class="signup-section">
                 <div>
                     <h2>Créer un compte</h2>
-                    <form id="signupForm" action="../php/traitementconnexion.php" method="POST">
+                    <form id="signupForm" action="../php/authentification/traitementconnexion.php" method="POST">
                         <div class="email">
                             <label for="emailSignup">Courriel</label>
                             <input type="email" id="emailSignup" name="courriel" placeholder="Entrez votre courriel" required>

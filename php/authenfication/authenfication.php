@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/../bdconfig/sessionInclude.php';
 session_start();
 $_SESSION['code'] = $code;
 $destinataire = $_SESSION['courriel'];

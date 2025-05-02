@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/../bdconfig/sessionInclude.php';
 $dbname = "tokoh25techinfo4_TKBUY";
 $utilisateur = "tokoh25techinfo4_therese_lire";
 $mdp = "Madeleine@1965";
@@ -20,7 +20,7 @@ if (isset($_POST['connexion'])) {
     $motdepasse = filter_input(INPUT_POST,"motdepasse",FILTER_DEFAULT);
 
     if (!$courriel || !$motdepasse) {
-        header("Location: ../index.php?session=erreurFormat");
+        echo  "Erreur :erreurFormat";
         exit;
     }
 
@@ -28,7 +28,7 @@ if (isset($_POST['connexion'])) {
 
     // Préparer la requête pour vérifier si l'utilisateur existe
     $verification_compte = $db->prepare("SELECT * FROM utilisateurs WHERE courriel = :courriel");
-    $verification_compte->bindParam(':courriel', $courriel);
+    $verification_compte->bindParam(':courriel', $courriel,PDO::PARAM_STR);
     $verification_compte->execute();
 
     if ($verification_compte->rowCount() > 0) {
@@ -40,7 +40,7 @@ if (isset($_POST['connexion'])) {
             
             // $_SESSION['nomutilisateurs'] = $user['nomutilisateurs'];
             
-            $_SESSION['courriel'] =$courriel;
+            //$_SESSION['courriel'] =$courriel;
 
             // $code = rand(100000,999999);
 
@@ -65,7 +65,7 @@ if (isset($_POST['connexion'])) {
             
             // j'envoi le mail
             if (envoyerMail($_SESSION['sessionTemporaire']['courriel'], "Votre code est : " . $_SESSION['sessionTemporaire']['code'])) {
-                header('Location: ../php/verificationcode.php');
+                header('Location: /TK_PROJET_WEB_APPLICATION/php/authenfication/verificationcode.php');
                 exit;
             } else {
                 echo "Erreur lors de l'envoi du courriel.";
@@ -76,11 +76,11 @@ if (isset($_POST['connexion'])) {
             // header("Location: ../php/connexion.php");
             // exit;
         } else {
-            header("Location: ../php/index.php?session=erreur");
+            echo "Erreur lors de session=erreur.";
             exit;
         }
     } else {
-        header("Location: ../php/index.php?session=compteInexistant");
+        echo "Erreur compteInexistant.";
         exit;
     }
 }

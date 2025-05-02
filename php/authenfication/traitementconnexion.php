@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/../bdconfig/sessionInclude.php';
 $dbname = "tokoh25techinfo4_TKBUY";
 $utilisateur = "tokoh25techinfo4_therese_ecrire";
 $mdp = "Madeleine@1965";
@@ -15,19 +15,21 @@ catch (PDOException $e)
 }
 
 if (isset($_POST['inscription'])) {
-    $nomutilisateurs = $_POST['nomutilisateurs'];
-    $courriel = $_POST['courriel'];
-    $motdepasse = $_POST['motdepasse'];
+    //$nomutilisateurs = $_POST['nomutilisateurs'];
+    $nomutilisateurs = filter_input(INPUT_POST,"nomutilisateurs",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+    $courriel = filter_input(INPUT_POST,"courriel", FILTER_VALIDATE_EMAIL);
+    $motdepasse = filter_input(INPUT_POST,"motdepasse",FILTER_DEFAULT);
 
     // Hash du mot de passe AVANT insertion
     $motdepasse = password_hash($motdepasse, PASSWORD_DEFAULT);
 
     // vérification du mot de passe
-    $courriel = filter_var($courriel, FILTER_VALIDATE_EMAIL);
+    //$courriel = filter_var($courriel, FILTER_VALIDATE_EMAIL);
 
     // Vérifier si l'utilisateur existe déjà (par courriel)
     $verification_compte = $db->prepare("SELECT * FROM utilisateurs WHERE courriel = :courriel");
-    $verification_compte->execute(['courriel' => $courriel]);
+    $verification_compte->bindParam(':courriel', $courriel,PDO::PARAM_STR);
+    $verification_compte->execute();
 
     if ($verification_compte->rowCount() > 0) {
         echo ("l'utilisateur exite deja");
@@ -46,7 +48,9 @@ if (isset($_POST['inscription'])) {
         session_start();  // Démarrer la session
         $_SESSION['nomutilisateurs'] = $nomutilisateurs;
         $_SESSION['courriel'] = $courriel;
-
+        header("Location: ../../php/connexion.php"); // Redirection après vérification
+        exit;
+        
     }
 }
 ?>

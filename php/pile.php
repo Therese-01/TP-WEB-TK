@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/bdconfig/sessionInclude.php';
 session_start();
 // Vérifie que l'utilisateur est connecté
 if (!isset($_SESSION['nomutilisateurs'])) {

@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/bdconfig/sessionInclude.php';
 session_start();
 
 if (!isset($_SESSION['panier'])) {

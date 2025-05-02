@@ -1,10 +1,10 @@
 <?php
-require_once __DIR__.'../bdconfig/sessionInclude.php';
+require_once __DIR__.'/bdconfig/sessionInclude.php';
 session_start();
 
 // Vérifie que l'utilisateur est connecté
 if (!isset($_SESSION['nomutilisateurs'])) {
-    header("Location: ../php/login.php");
+    header("Location: ./login.php");
     exit;
 }
 ?>
@@ -55,8 +55,8 @@ if (!isset($_SESSION['nomutilisateurs'])) {
     </div>
 
     <div class="commun">
-        <button type="submit"><a href="../php/deconnexion.php" style="text-decoration:none">Deconnexion</button></a>
-        <button type="submit"><a href="../php/login.php" style="text-decoration:none">Connexion</button></a>
+        <button type="submit"><a href="/TK_PROJET_WEB_APPLICATION/php/authenfication/deconnexion.php" style="text-decoration:none">Deconnexion</button></a>
+        <button type="submit"><a href="./login.php" style="text-decoration:none">Connexion</button></a>
     </div>
     
 

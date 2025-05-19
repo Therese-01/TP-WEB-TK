@@ -53,8 +53,10 @@ try {
                 exit;
 
             } else {
+                header("Location: ../erreur.php");
             }
         } else {
+            header("Location: ../erreur.php");
         }
     }
 } catch (Exception $e) 

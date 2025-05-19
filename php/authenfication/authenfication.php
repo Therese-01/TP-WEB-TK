@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/../bdconfig/sessionInclude.php';
+require_once '/home/tokoh25techinfo4/bdconfig/sessionInclude.php';
 session_start();
 $_SESSION['code'] = $code;
 $destinataire = $_SESSION['courriel'];
@@ -18,7 +18,7 @@ if (envoyerMail($destinataire, "Votre code est : ".$code)) {
     header("Location: ../php/authentification/coderecu.php");
     exit();
 } else {
-    echo "<p>Message non envoyé à ". $destinataire."</p>";
+    //echo "<p>Message non envoyé à ". $destinataire."</p>";
 }
 
 function envoyerMail($to, $message) {

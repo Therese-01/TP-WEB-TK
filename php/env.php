@@ -1,5 +1,0 @@
-<?php
-    putenv("SMS=valeur");
-
-
-    

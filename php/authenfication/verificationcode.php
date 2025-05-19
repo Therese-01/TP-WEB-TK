@@ -1,11 +1,10 @@
 <?php
-require_once __DIR__.'/../bdconfig/sessionInclude.php';
+require_once '/home/tokoh25techinfo4/bdconfig/sessionInclude.php';
 session_start();
 
-if (isset($_POST['valider'])) {
-    //if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+try {
+    if (isset($_POST['valider'])) {
         $code_saisi = filter_input(INPUT_POST,"code",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-        //$code_saisi = $_POST['code'] ?? '';
 
         
         if (isset($_SESSION['sessionTemporaire'])) {
@@ -15,8 +14,6 @@ if (isset($_POST['valider'])) {
                 $nomutilisateurs = $_SESSION['sessionTemporaire']['nomutilisateurs'];
                 $courriel = $_SESSION['sessionTemporaire']['courriel'];
 
-                // vérification du courriel
-                $courriel = filter_input(INPUT_POST,$courriel, FILTER_VALIDATE_EMAIL);
 
                 // Détruit toutes les variables de session
                 $_SESSION = array();
@@ -39,19 +36,32 @@ if (isset($_POST['valider'])) {
                 session_start();
                 $_SESSION['nomutilisateurs'] = $nomutilisateurs;
                 $_SESSION['courriel'] = $courriel;
+                
+                // Journalisation de la connexion réussie
+                $logfile = '/home/tokoh25techinfo4/logs/connexionreussis.log'; // Emplacement du fichier log
 
+                $logMessage = sprintf(
+                    "[%s] Connexion réussie : %s depuis IP %s\n",
+                    date('Y-m-d H:i:s'),
+                    $courriel,
+                    $_SERVER['REMOTE_ADDR']
+                );
+
+                // Écrire dans le fichier log
+                file_put_contents($logfile, $logMessage, FILE_APPEND | LOCK_EX);
                 header("Location: /TK_PROJET_WEB_APPLICATION/php/connexion.php"); // Redirection après vérification
                 exit;
 
             } else {
-                echo "Code incorrect.";
             }
         } else {
-            echo "Session expirée ou invalide.";
         }
+    }
+} catch (Exception $e) 
+    {
+        exit();
+    }
 
-    //}
-}
 ?>
 
 <!DOCTYPE html>

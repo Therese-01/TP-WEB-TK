@@ -1,56 +1,72 @@
 <?php
-require_once __DIR__.'/../bdconfig/sessionInclude.php';
-$dbname = "tokoh25techinfo4_TKBUY";
-$utilisateur = "tokoh25techinfo4_therese_ecrire";
-$mdp = "Madeleine@1965";
+require_once '/home/tokoh25techinfo4/bdconfig/sessionInclude.php';
+require_once '/home/tokoh25techinfo4/bdconfig/bd.includeInscription.php';
+function log_ecriture_bd($courriel, $action, $details = '') {
+    $logfile = '/home/tokoh25techinfo4/logs/ecriture_base_de_donnée.log';
+    $ip = $_SERVER['REMOTE_ADDR'];
+    $date = date('Y-m-d H:i:s');
+    $log = "[$date] Écriture BD : $action | Utilisateur : $courriel | IP : $ip | Détails : $details\n";
+    file_put_contents($logfile, $log, FILE_APPEND | LOCK_EX);
+}
+
 
 try {
-    $db = new PDO ("mysql:host=localhost;dbname=$dbname", $utilisateur, $mdp);
+    $db = new PDO (
+    "mysql:host=".BDSERVEUR. ";dbname=" . BDSCHEMA,
+        BDUTILISATEUR_ECRIRE, 
+        BDMDP
+    );
     $db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 }
 
 catch (PDOException $e)
 {
-    echo "Erreur :".$e->getMessage();
+    //echo "Erreur :".$e->getMessage();
 }
 
-if (isset($_POST['inscription'])) {
-    //$nomutilisateurs = $_POST['nomutilisateurs'];
-    $nomutilisateurs = filter_input(INPUT_POST,"nomutilisateurs",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-    $courriel = filter_input(INPUT_POST,"courriel", FILTER_VALIDATE_EMAIL);
-    $motdepasse = filter_input(INPUT_POST,"motdepasse",FILTER_DEFAULT);
+try {
+    if (isset($_POST['inscription'])) {
+        $nomutilisateurs = filter_input(INPUT_POST,"nomutilisateurs",FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+        $courriel = filter_input(INPUT_POST,"courriel", FILTER_VALIDATE_EMAIL);
+        $motdepasse = filter_input(INPUT_POST,"motdepasse",FILTER_DEFAULT);
 
-    // Hash du mot de passe AVANT insertion
-    $motdepasse = password_hash($motdepasse, PASSWORD_DEFAULT);
+        // 🔒 Vérification des champs obligatoires
+        if (empty($nomutilisateurs) || empty($courriel) || empty($motdepasse)) {
+            exit(); 
+        }
 
-    // vérification du mot de passe
-    //$courriel = filter_var($courriel, FILTER_VALIDATE_EMAIL);
+        // Hash du mot de passe AVANT insertion
+        $motdepasse = password_hash($motdepasse, PASSWORD_DEFAULT);
 
-    // Vérifier si l'utilisateur existe déjà (par courriel)
-    $verification_compte = $db->prepare("SELECT * FROM utilisateurs WHERE courriel = :courriel");
-    $verification_compte->bindParam(':courriel', $courriel,PDO::PARAM_STR);
-    $verification_compte->execute();
+        // Vérifier si l'utilisateur existe déjà (par courriel)
+        $verification_compte = $db->prepare("SELECT * FROM utilisateurs WHERE courriel = :courriel");
+        $verification_compte->bindParam(':courriel', $courriel,PDO::PARAM_STR);
+        $verification_compte->execute();
 
-    if ($verification_compte->rowCount() > 0) {
-        echo ("l'utilisateur exite deja");
-       
-    } else {
-        // Insérer le nouvel utilisateur
-        $requete = $db->prepare("INSERT INTO utilisateurs VALUES (0,  :nomutilisateurs, :courriel, :motdepasse)");
-        $requete->execute(
-            array(
-            "nomutilisateurs" => $nomutilisateurs,
-            "courriel" => $courriel,
-            "motdepasse" => $motdepasse
-            )
-        );
-        // Connexion immédiate de l'utilisateur après l'inscription réussie
-        session_start();  // Démarrer la session
-        $_SESSION['nomutilisateurs'] = $nomutilisateurs;
-        $_SESSION['courriel'] = $courriel;
-        header("Location: ../../php/connexion.php"); // Redirection après vérification
-        exit;
+        if ($verification_compte->rowCount() > 0) {
         
+        } else {
+            // Insérer le nouvel utilisateur
+            $requete = $db->prepare("INSERT INTO utilisateurs VALUES (0,  :nomutilisateurs, :courriel, :motdepasse)");
+            $requete->execute(
+                array(
+                "nomutilisateurs" => $nomutilisateurs,
+                "courriel" => $courriel,
+                "motdepasse" => $motdepasse
+                )
+            );
+            log_ecriture_bd($courriel, 'Création de compte', "Nom d'utilisateur : $nomutilisateurs");
+
+            // Connexion immédiate de l'utilisateur après l'inscription réussie
+            session_start();  // Démarrer la session
+            $_SESSION['nomutilisateurs'] = $nomutilisateurs;
+            $_SESSION['courriel'] = $courriel;
+            header("Location: ../../php/connexion.php"); // Redirection après vérification
+            exit;
+        }
     }
-}
+} catch (Exception $e) 
+    {
+        exit();
+    }
 ?>

@@ -16,34 +16,51 @@ function validerMotdepasse(mdp) {
   return mdp.length >= 8 && regexMinuscule.test(mdp) && regexMajuscule.test(mdp) && regexChiffre.test(mdp);
 }
 
-document.getElementById("signupForm").addEventListener("submit", function(e) {
-  e.preventDefault();
-  var mdp = document.getElementById("passwordSignup").value;
+function validerEmail(email) {
+  var regexEmail = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+  return regexEmail.test(email);
+}
+
+function validerNomUtilisateur(nom) {
+  var regex = /^[a-zA-Z0-9]{5,12}$/;
+  return regex.test(nom);
+}
+
+function AfficherBlocMotDePasse() {
+  var email = document.getElementById("emailSignup").value.trim();
+  var mdp = document.getElementById("passwordSignup").value.trim();
   var erreur = document.getElementById("erreurSignup");
-
-  if (!validerMotdepasse(mdp)) {
-    erreur.style.display = "block";
-    erreur.textContent = "Le mot de passe doit contenir au moins 8 caractères, une majuscule, une minuscule et un chiffre.";
-  } else {
+  
+  // Vérifie l'email
+  if (validerEmail(email)) {
+    document.getElementById("passwdSection").style.display = "block"; 
     erreur.style.display = "none";
-    // Ici tu peux envoyer le formulaire
-    alert("Compte créé !");
-    // this.submit();
-  }
-});
 
-document.getElementById("loginForm").addEventListener("submit", function(supprimer) {
-  supprimer.preventDefault();
-  var mdp = document.getElementById("passwordLogin").value;
-  var erreur = document.getElementById("erreurLogin");
+    // Vérifie le mot de passe seulement si l'email est valide
+    if (validerMotdepasse(mdp)) {
+      document.getElementById("nomUtilisateurSection").style.display = "block";
 
-  if (!validerMotdepasse(mdp)) {
-    erreur.style.display = "block";
-    erreur.textContent = "Mot de passe invalide.";
+      // Vérifie le nom utilisateur et affiche erreur si invalide
+      if (nom !== "" && !validerNomUtilisateur(nom)) {
+        erreur.style.display = "block";
+        erreur.textContent = "Le nom d'utilisateur doit contenir entre 5 et 12 caractères alphanumériques.";
+      } else {
+        erreur.style.display = "none";
+      }
+    } else {
+      document.getElementById("nomUtilisateurSection").style.display = "none";
+    }
   } else {
-    erreur.style.display = "none";
-    // Ici tu peux envoyer le formulaire
-    alert("Connexion réussie !");
-    // this.submit();
+    document.getElementById("passwdSection").style.display = "none";
+    document.getElementById("nomUtilisateurSection").style.display = "none";
+    erreur.style.display = "block";
+    erreur.textContent = "L'email n'est pas valide.";
   }
+}
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("emailSignup").addEventListener("input", AfficherBlocMotDePasse);
+  document.getElementById("passwordSignup").addEventListener("input", AfficherBlocMotDePasse);
+  document.getElementById("nomUtilisateurSection").addEventListener("input", AfficherBlocMotDePasse);
 });

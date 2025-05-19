@@ -1,5 +1,5 @@
 <?php
-require_once __DIR__.'/bdconfig/sessionInclude.php';
+require_once '/home/tokoh25techinfo4/bdconfig/sessionInclude.php';
 session_start();
 
 if (!isset($_SESSION['panier'])) {
@@ -30,6 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['nom'], $_POST['prix'],
     $prix = $_POST['prix'];
     $image = $_POST['image'];
 
+    
     $produit = [
         'nom' => $nom,
         'prix' => $prix,
@@ -111,7 +112,7 @@ $nombreArticles = count($_SESSION['panier']);
                     $totalPanier += $produit['prix'];
                     ?>
                     <tr>
-                        <td><img src="<?= $produit['image']; ?>" width="50"></td>
+                        <td><img src="../<?= ltrim($produit['image'], '/') ?>" width="50"></td>
                         <td><?= $produit['nom']; ?></td>
                         <td><?= $produit['prix']; ?></td>
                         <td><button type="button" class="supprimer" data-nom="<?= $produit['nom']; ?>"><img src="../images/im2.JPG"></button></td>

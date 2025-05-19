@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -43,9 +42,9 @@
     <?php
 
     $categories = [
-        ["id" => "tele", "image" => "../images/television.webp", "nom" => "Téléviseurs, cinéma maison et accessoires"],
-        ["id" => "ordi", "image" => "../images/ordinateur.webp", "nom" => "Ordinateurs, tablettes et accessoires"],
-        ["id" => "tel", "image" => "../images/telephone.webp", "nom" => "Cellulaires"],
+        ["id" => "television", "image" => "../images/television.webp", "nom" => "Téléviseurs, cinéma maison et accessoires"],
+        ["id" => "ordinateur", "image" => "../images/ordinateur.webp", "nom" => "Ordinateurs, tablettes et accessoires"],
+        ["id" => "telephone", "image" => "../images/telephone.webp", "nom" => "Cellulaires"],
         ["id" => "ecoute", "image" => "../images/ecouteur.webp", "nom" => "Écouteurs"],
         ["id" => "jeux", "image" => "../images/jeu_vido.webp", "nom" => "Accessoires et équipement de jeu pour PC"],
         ["id" => "photo", "image" => "../images/camera.webp", "nom" => "Photos"],
@@ -65,7 +64,7 @@
                 <div class="conteneur-categorie">
                     <?php for ($j = $i; $j < $i + 4 && $j < count($categories); $j++) { ?>
                         <div class="category">
-                            <a href="<?= $categories[$j]['id'] ?>.php">
+                            <a href="categorie.php?cat=<?= $categories[$j]['id'] ?>">
                                 <img src="<?= $categories[$j]['image'] ?>" alt="<?= $categories[$j]['nom'] ?>">
                                 <p><?= $categories[$j]['nom'] ?></p>
                             </a>

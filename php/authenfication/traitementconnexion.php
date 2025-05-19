@@ -44,7 +44,7 @@ try {
         $verification_compte->execute();
 
         if ($verification_compte->rowCount() > 0) {
-        
+            header("Location: ../erreur.php");
         } else {
             // Insérer le nouvel utilisateur
             $requete = $db->prepare("INSERT INTO utilisateurs VALUES (0,  :nomutilisateurs, :courriel, :motdepasse)");

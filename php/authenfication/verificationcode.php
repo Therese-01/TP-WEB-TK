@@ -54,13 +54,16 @@ try {
 
             } else {
                 header("Location: ../erreur.php");
+                exit;
             }
         } else {
             header("Location: ../erreur.php");
+            exit;
         }
     }
 } catch (Exception $e) 
     {
+        header("Location: ../erreur.php");
         exit();
     }
 

@@ -21,7 +21,7 @@ try {
 
 catch (PDOException $e)
 {
-    //echo "Erreur :".$e->getMessage();
+    header("Location: ../erreur.php");
 }
 
 try {
@@ -32,6 +32,7 @@ try {
 
         // 🔒 Vérification des champs obligatoires
         if (empty($nomutilisateurs) || empty($courriel) || empty($motdepasse)) {
+            header("Location: ../erreur.php");
             exit(); 
         }
 
@@ -67,6 +68,7 @@ try {
     }
 } catch (Exception $e) 
     {
+        header("Location: ../erreur.php");
         exit();
     }
 ?>

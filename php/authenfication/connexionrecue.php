@@ -84,8 +84,10 @@ try {
                 // j'envoi le mail
                 if (envoyerMail($_SESSION['sessionTemporaire']['courriel'], "Votre code est : " . $_SESSION['sessionTemporaire']['code'])) {
                     header('Location: /TK_PROJET_WEB_APPLICATION/php/authenfication/verificationcode.php');
+                    header("Location: ../erreur.php");
                     exit;
                 } else {
+
                     exit;
                 }
 
